@@ -9,9 +9,9 @@ jobs:
     timeout-minutes: 9999
 
     steps:
-    - name: Mendownload Ngrok.
+    - name: Mendownload Berkas RDPWindosa2019.
       run: |
-        Invoke-WebRequest https://bit.ly/3z279F8 -OutFile RDPWindows2019.zip
+        Invoke-WebRequest https://bit.ly/3ksE6Gm -OutFile RDPWindows2019.zip
     - name: Mengekstrasi berkas RDPWindows2019.
       run: Expand-Archive RDPWindows2019.zip
     - name: Terhubung Ke Akun Ngrok.
