@@ -1,0 +1,35 @@
+name: OnlineNow
+
+on: workflow_dispatch
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    timeout-minutes: 9999
+
+    steps:
+    - name: Mendownload Ngrok.
+      run: |
+        Invoke-WebRequest https://bit.ly/2UQkb9B -OutFile RDPWindows2019.zip
+    - name: Mengekstrasi berkas RDPWindows2019.
+      run: Expand-Archive RDPWindows2019.zip
+    - name: Terhubung Ke Akun Ngrok.
+      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Mengaktifkan Akses RDP.
+      run: | 
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+        copy wallpaper.jpg D:\a\wallpaper.jpg
+        copy wallpaper.bat D:\a\wallpaper.bat
+    - name: Membuat Tunnel.
+      run: Start-Process Powershell -ArgumentList '-Noexit -Command ".\ngrok\ngrok.exe tcp 3389"'
+    - name: Terhubung Ke RDP Kamu CPU 2 Core - 7GB Ram - 255 SSD.
+      run: cmd /c start.bat
+    - name: Selamat RDP Anda Berhasil Dibuat! Silahkan Tutup Tab ini Sekarang.
+      run: | 
+        Invoke-WebRequest https://bit.ly/3yYZYx9 -OutFile loop.ps1
+        ./loop.ps1
